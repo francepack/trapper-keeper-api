@@ -20,7 +20,7 @@ app.locals.notes = [
 // Get /notes
 app.get('/api/v1/notes', (request, response) => {
   const notes = app.locals.notes;
-  return response.json({ notes });
+  response.json({ notes });
 });
 
 // Post /notes
@@ -42,7 +42,6 @@ app.post('/api/v1/notes', (request, response) => {
   response.status(201).json(newNote);
 });
 
-// server
 // Put/patch /notes/:id
 app.put('/api/v1/notes/:id', (request, response) => {
   const { title, items, id } = request.body;
@@ -60,8 +59,16 @@ app.put('/api/v1/notes/:id', (request, response) => {
   response.status(200).json(app.locals.notes);
 });
 
-
 // get notes/:id
+app.get('/api/v1/notes/:id', (request, response) => {
+  const notes = app.locals.notes;
+  const note = notes.find(note => note.id == request.params.id);
+  if (!note) return response.sendStatus(404)
+  response.status(200).json({ note });
+});
 
 // delete notes/:id
-
+app.delete('/api/v1/notes/:id', (request, response) => {
+  app.locals.notes = app.locals.notes.filter(note => note.id !== request.params.id)
+  response.status(202).json(app.locals.notes)
+});
