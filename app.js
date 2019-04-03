@@ -17,15 +17,15 @@ app.locals.notes = [
 // Get api/v1/notes
 app.get('/api/v1/notes', (request, response) => {
   const notes = app.locals.notes;
-  response.json({ notes });
+  response.status(200).json( {notes} );
 });
 
 // get api/v1/notes/:id
 app.get('/api/v1/notes/:id', (request, response) => {
   const notes = app.locals.notes;
   const note = notes.find(note => note.id == request.params.id);
-  if (!note) return response.sendStatus(404);
-  response.status(200).json({ note });
+  if (!note) return response.status(404).json('Note not found');
+  response.status(200).json( {note} );
 });
 
 // Post api/v1/notes
@@ -61,13 +61,13 @@ app.put('/api/v1/notes/:id', (request, response) => {
     items
   };
   app.locals.notes.splice(noteIndex, 1, editedNote);
-  response.status(200).json(app.locals.notes);
+  response.status(200).json('Your note has been edited');
 });
 
 // delete api/v1/notes/:id
 app.delete('/api/v1/notes/:id', (request, response) => {
   app.locals.notes = app.locals.notes.filter(note => note.id !== request.params.id);
-  response.status(202).json(app.locals.notes);
+  response.status(202).json('Your note is gone!');
 });
 
 export default app;
