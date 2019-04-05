@@ -8,9 +8,9 @@ app.use(express.json());
 
 app.locals.notes = [
   {
-    id: 1,
+    id: '1',
     title: 'NoteApp',
-    items: ['make backend', 'make front end', 'make pretty']
+    items: [{id: 'a1', value: 'make backend'}, {id: 'a2', value: 'make front end'}, {id: 'a3', value: 'make pretty'}]
   }
 ];
 
@@ -66,8 +66,9 @@ app.put('/api/v1/notes/:id', (request, response) => {
 
 // delete api/v1/notes/:id
 app.delete('/api/v1/notes/:id', (request, response) => {
-  app.locals.notes = app.locals.notes.filter(note => note.id !== request.params.id);
-  response.status(202).json('Your note is gone!');
+  let newNotes = app.locals.notes.filter(note => note.id !== request.params.id);
+  app.locals.notes = newNotes;
+  response.sendStatus(204);
 });
 
 export default app;
