@@ -7,10 +7,16 @@ app.use(cors());
 app.use(express.json());
 
 app.locals.notes = [
+  // Test Note
   {
     id: 1,
     title: 'NoteApp',
-    items: ['make backend', 'make front end', 'make pretty']
+    items: [ 
+      {id: 'abc', value: 'make backend'}, 
+      {id: '123', value: 'make front end'}, 
+      {id: '456', value: 'make pretty'},
+      {id: 'res', value: 'show up maybe?'} 
+    ]
   }
 ];
 
@@ -67,7 +73,7 @@ app.put('/api/v1/notes/:id', (request, response) => {
 // delete api/v1/notes/:id
 app.delete('/api/v1/notes/:id', (request, response) => {
   app.locals.notes = app.locals.notes.filter(note => note.id !== request.params.id);
-  response.status(202).json('Your note is gone!');
+  response.sendStatus(204);
 });
 
 export default app;
