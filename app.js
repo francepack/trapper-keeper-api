@@ -6,13 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.locals.notes = [
-  {
-    id: 1,
-    title: 'NoteApp',
-    items: ['make backend', 'make front end', 'make pretty']
-  }
-];
+app.locals.notes = [];
 
 // Get api/v1/notes
 app.get('/api/v1/notes', (request, response) => {
