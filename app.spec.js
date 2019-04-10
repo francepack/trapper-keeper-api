@@ -103,11 +103,9 @@ describe('api', () => {
     it('should delete the correct note and return a 202 message', async () => {
       const { notes } = app.locals
       expect(notes.length).toBe(3)
-      const deleteNote = { id: '3', title: 'MockNote3', items: [{id: '40', value: 'g'}, {id: '41', value: 'h'}, {id: '42', value: 'i'}] }
+      const deleteNote = { id: '1', title: 'MockNote1', items: [{id: '22', value: 'a'}, {id: '23', value: 'b'}, {id: '24', value: 'c'}] }
       const response = await request(app).delete(`/api/v1/notes/${deleteNote.id}`)
-        // .send({ id: deleteNote.id })
       expect(response.status).toBe(204)
-      // expect(response.body).toEqual('Your note is gone!')
       expect(notes.length).toBe(2)
     })
   })
