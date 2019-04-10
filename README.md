@@ -1,6 +1,6 @@
 # Trapper Keeper BackEnd
 ## Description
-This is the backend that supports our application Trapper-keeper found at:
+This is the backend that supports our application Trapper-keeper found at:<br/>
 https://github.com/francepack/trapper-keeper-ui
 
 ## How to use
@@ -29,6 +29,6 @@ http://localhost:3001/api/v1/notes
 This was made using node.js and Express. Testing completed with Jest, Enzyme, and supertest.
 
 ## Contributers
-Edgar Munoz @criteriamor
-Taylor Sperry @taylorsperry
-Mason France @francepack
+Edgar Munoz [@criteriamor](https://github.com/criteriamor)<br/>
+Taylor Sperry [@taylorsperry](https://github.com/taylorsperry)<br/>
+Mason France [@francepack](https://github.com/francepack)
