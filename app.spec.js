@@ -33,7 +33,7 @@ describe('api', () => {
     it('should return a 404 status if there is no note that id', async () => {
       const response = await request(app).get('/api/v1/notes/8')
       expect(response.status).toBe(404)
-      expect(response.body).toEqual('Note not found')
+      expect(response.body).toEqual('404 error - Note not found')
     })
   })
 
@@ -88,6 +88,7 @@ describe('api', () => {
     it('should return a 200 status and a message that the note has been successfully edited', async () => {
       const { notes } = app.locals
       expect(notes.length).toBe(3)
+      expect(notes[0]).toEqual({ id: '1', title: 'MockNote1', items: [{id: '22', value: 'a'}, {id: '23', value: 'b'}, {id: '24', value: 'c'}]})
       const editedNote = {id: '1', title: 'title', items: [{id: '17', value: 'hello'}, {id: '18', value: 'bye'}]}
 
       const response = await request(app).put('/api/v1/notes/1')
@@ -95,18 +96,73 @@ describe('api', () => {
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual('Your note has been edited')
+      expect(notes[0]).toEqual(editedNote)
       expect(notes.length).toBe(3)
+    })
+
+    it('should return a 422 status and error message if the title and items are missing', async () => {
+      const { notes } = app.locals
+      expect(notes[0]).toEqual({ id: '1', title: 'MockNote1', items: [{id: '22', value: 'a'}, {id: '23', value: 'b'}, {id: '24', value: 'c'}]})
+
+      const response = await request(app).put('/api/v1/notes/1')
+        .send( { id: '1', title: '', items: [] })
+      expect(response.status).toBe(422)
+      expect(response.body).toEqual('Missing title and list')
+      expect(notes[0]).toEqual({ id: '1', title: 'MockNote1', items: [{id: '22', value: 'a'}, {id: '23', value: 'b'}, {id: '24', value: 'c'}]})
+    })
+
+    it('should return a 422 status and error message if the title is missing', async () => {
+      const { notes } = app.locals
+      expect(notes[0]).toEqual({ id: '1', title: 'MockNote1', items: [{id: '22', value: 'a'}, {id: '23', value: 'b'}, {id: '24', value: 'c'}]})
+
+      const response = await request(app).put('/api/v1/notes/1')
+        .send( { id: '1', title: '', items: [{id: '5', value: 'mockItem'}] })
+      expect(response.status).toBe(422)
+      expect(response.body).toEqual('Missing title')
+      expect(notes[0]).toEqual({ id: '1', title: 'MockNote1', items: [{id: '22', value: 'a'}, {id: '23', value: 'b'}, {id: '24', value: 'c'}]})
+    })
+
+    it('should return a 422 status and error message if items are missing', async () => {
+      const { notes } = app.locals
+      expect(notes[0]).toEqual({ id: '1', title: 'MockNote1', items: [{id: '22', value: 'a'}, {id: '23', value: 'b'}, {id: '24', value: 'c'}]})
+
+      const response = await request(app).put('/api/v1/notes/1')
+        .send( { id: '1', title: 'Hello', items: [] })
+      expect(response.status).toBe(422)
+      expect(response.body).toEqual('Missing list')
+      expect(notes[0]).toEqual({ id: '1', title: 'MockNote1', items: [{id: '22', value: 'a'}, {id: '23', value: 'b'}, {id: '24', value: 'c'}]})
+    })
+
+    it('should return a 404 status and error message if the note is not found', async () => {
+      const { notes } = app.locals
+      expect(notes[0]).toEqual({ id: '1', title: 'MockNote1', items: [{id: '22', value: 'a'}, {id: '23', value: 'b'}, {id: '24', value: 'c'}]})
+
+      const response = await request(app).put('/api/v1/notes/22')
+        .send({id: '13', title: 'title', items: [{id: '17', value: 'hello'}, {id: '18', value: 'bye'}]})
+      expect(response.status).toBe(404)
+      expect(response.body).toEqual('404 error - Note not found')
+      expect(notes[0]).toEqual({ id: '1', title: 'MockNote1', items: [{id: '22', value: 'a'}, {id: '23', value: 'b'}, {id: '24', value: 'c'}]})
     })
   })
 
   describe('delete /api/v1/notes/:id', () => {
-    it('should delete the correct note and return a 202 message', async () => {
+    it.skip('should delete the correct note and return a 204 message', async () => {
       const { notes } = app.locals
-      expect(notes.length).toBe(3)
-      const deleteNote = { id: '1', title: 'MockNote1', items: [{id: '22', value: 'a'}, {id: '23', value: 'b'}, {id: '24', value: 'c'}] }
-      const response = await request(app).delete(`/api/v1/notes/${deleteNote.id}`)
+      expect(notes[0].id).toEqual('1')
+      const response = await request(app).delete('/api/v1/notes/1')
+        .send({ id: '1' })
       expect(response.status).toBe(204)
-      expect(notes.length).toBe(2)
+      expect(notes[0].id).toEqual('2')
+    })
+
+    it('should return a 404 status and error if note is not found', async () => {
+      const { notes } = app.locals
+      expect(notes[0].id).toEqual('1')
+
+      const response = await request(app).delete('/api/v1/notes/33')
+      expect(response.status).toBe(404)
+      expect(response.body).toEqual('404 error - Note not found')
+      expect(notes[0].id).toEqual('1')
     })
   })
 })
